@@ -3,8 +3,7 @@ from io import TextIOWrapper
 import csv
 import os
 import sys
-
-from flask import Flask, request, redirect, url_for
+from flask import Flask, request, redirect, url_for, jsonify
 from flask_sqlalchemy import SQLAlchemy
 
 app = Flask(__name__)
@@ -12,25 +11,25 @@ app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///../data/database.db'
 db = SQLAlchemy(app)
 
 class Employee(db.Model):
-    id = db.Column(db.Integer, primary_key=True)
-    name = db.Column(db.String)
-    datetime = db.Column(db.String)
-    department_id = db.Column(db.Integer)
-    job_id = db.Column(db.Integer)
+    id = db.Column(db.Integer, primary_key=True, nullable=False)
+    name = db.Column(db.String, nullable=False)
+    datetime = db.Column(db.String, nullable=False)
+    department_id = db.Column(db.Integer, nullable=False)
+    job_id = db.Column(db.Integer, nullable=False)
     
     def __repr__(self):
         return "<Employee: {}>".format(self.name)
 
 class Department(db.Model):
-    id = db.Column(db.Integer, primary_key=True)
-    department = db.Column(db.String)
+    id = db.Column(db.Integer, primary_key=True, nullable=False)
+    department = db.Column(db.String, nullable=False)
     
     def __repr__(self):
         return "<Department: {}>".format(self.department)
 
 class Job(db.Model):
-    id = db.Column(db.Integer, primary_key=True)
-    job = db.Column(db.String)
+    id = db.Column(db.Integer, primary_key=True, nullable=False)
+    job = db.Column(db.String, nullable=False)
     
     def __repr__(self):
         return "<Job: {}>".format(self.job)
@@ -60,7 +59,7 @@ def upload_csv():
                     db.session.commit()
             else:
                 pass
-            return redirect(url_for('upload_csv'))
+        return redirect(url_for('upload_csv'))
     return """
             <form method='post' action='/' enctype='multipart/form-data'>
               Upload a csv file: <input type='file' name='file'>
@@ -75,9 +74,29 @@ def upload_csv():
             </form>
            """
            
-    @app.route('/backup', methods=['POST'])
-    def backuptable():
-        pass
+
+@app.route('/backup', methods=['POST'])
+def backuptable():
+    pass
+
+@app.route('/employeesbyq', methods=['GET'])
+def employeesbyq():
+    with open("../data/hiredemployees2021.sql") as file:
+        sql = file.read().rstrip()
+        print(sql,file=sys.stderr)
+        result = db.engine.execute(sql)
+        print(result,file=sys.stderr)
+        return jsonify({'result': [dict(row) for row in result]})
+           
+    
+@app.route('/higerhiresdep', methods=['GET'])
+def higerhiresdep():
+    with open("../data/departmenthires.sql") as file:
+        sql = file.read().rstrip()
+        print(sql,file=sys.stderr)
+        result = db.engine.execute(sql)
+        print(result,file=sys.stderr)
+        return jsonify({'result': [dict(row) for row in result]})
 
 if __name__ == '__main__':
     db.create_all()
