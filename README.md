@@ -46,3 +46,13 @@ Chose wich table you want to restore from avro format.
 ```
 http://localhost:5000/restore
 ```
+
+Chose wich table you want to get the count.
+```
+http://localhost:5000/getTableCount
+```
+
+Chose wich table you want to clean.
+```
+http://localhost:5000/cleanTable
+```

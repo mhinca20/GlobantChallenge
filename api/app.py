@@ -129,7 +129,7 @@ def restoretable():
                 db.session.commit()
         elif "job" == table:
             for row in reader:
-                row = Job(id=row['id'], department=row['job'])
+                row = Job(id=row['id'], job=row['job'])
                 db.session.add(row)
                 db.session.commit()
         reader.close()
