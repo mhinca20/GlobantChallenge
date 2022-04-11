@@ -48,7 +48,7 @@ def upload_csv():
             if "employee" == file_type:
                 for row in csv_reader:
                     if '' in row:
-                        print("The following row is not going to be inserted, it contains empty values "+row,file=sys.stderr)
+                        print("The following row is not going to be inserted, it contains empty values "+str(row),file=sys.stderr)
                         continue
                     row = Employee(id=row[0], name=row[1], datetime=row[2], department_id=row[3], job_id=row[4])
                     db.session.add(row)
@@ -56,7 +56,7 @@ def upload_csv():
             elif "department" == file_type:
                 for row in csv_reader:
                     if '' in row:
-                        print("The following row is not going to be inserted, it contains empty values "+row,file=sys.stderr)
+                        print("The following row is not going to be inserted, it contains empty values "+str(row),file=sys.stderr)
                         continue
                     row = Department(id=row[0], department=row[1])
                     db.session.add(row)
@@ -64,7 +64,7 @@ def upload_csv():
             elif "job" == file_type:
                 for row in csv_reader:
                     if '' in row:
-                        print("The following row is not going to be inserted, it contains empty values "+row,file=sys.stderr)
+                        print("The following row is not going to be inserted, it contains empty values "+str(row),file=sys.stderr)
                         continue
                     row = Job(id=row[0], job=row[1])
                     db.session.add(row)
