@@ -3,7 +3,7 @@
 
 # Requirements
 [docker](https://www.docker.com/get-docker)
-[docker-compose]
+[docker-compose](https://docs.docker.com/compose/install/)
 
 # Usage
 Clone this repository
@@ -35,4 +35,14 @@ employees than the mean of employees hired in 2021 for all the departments, orde
 by the number of employees hired (descending).
 ```
 http://localhost:5000/higerhiresdep
+```
+
+Chose wich table you want to backup as avro format.
+```
+http://localhost:5000/backup
+```
+
+Chose wich table you want to restore from avro format.
+```
+http://localhost:5000/restore
 ```

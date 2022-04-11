@@ -1,0 +1,8 @@
+{"namespace": "department.avro",
+ "type": "record",
+ "name": "Department",
+ "fields": [
+     {"name": "id", "type": "int"},
+     {"name": "department",  "type": "string"}
+ ]
+}
