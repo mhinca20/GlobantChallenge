@@ -162,6 +162,43 @@ def higerhiresdep():
         result = db.engine.execute(sql)
         return jsonify({'result': [dict(row) for row in result]})
 
+@app.route('/getTableCount', methods=['GET', 'POST'])
+def getTableCount():
+    if request.method == 'POST':
+        table = request.form.get('table-name')
+        result = db.engine.execute("select count(*) as count from "+ table )
+        return jsonify({table: [dict(row) for row in result]})
+    return """
+            <form method='post' action='/getTableCount'>
+              <label for="table-name">Choose a table to get count:</label>
+              <select name="table-name" id="table-name">
+              <option value="employee">Employee</option>
+              <option value="job">Job</option>
+              <option value="department">Department</option>
+              </select>
+              <input type='submit' value='count'>
+              <br>
+            </form>
+           """
+
+@app.route('/cleanTable', methods=['GET', 'POST'])
+def cleanTable():
+    if request.method == 'POST':
+        table = request.form.get('table-name')
+        result = db.engine.execute("delete from "+ table )
+    return """
+            <form method='post' action='/cleanTable'>
+              <label for="table-name">Choose a table to clean:</label>
+              <select name="table-name" id="table-name">
+              <option value="employee">Employee</option>
+              <option value="job">Job</option>
+              <option value="department">Department</option>
+              </select>
+              <input type='submit' value='cleanTable'>
+              <br>
+            </form>
+           """
+
 if __name__ == '__main__':
     db.create_all()
     if os.environ.get('PORT') is not None:
