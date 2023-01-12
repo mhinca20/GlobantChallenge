@@ -1,6 +1,10 @@
-FROM python:3.4-alpine
+FROM python:3.8-alpine
 COPY . /web
-WORKDIR /web/api
+WORKDIR /web
+RUN apk update && apk add python3-dev \
+                        gcc \
+                        libc-dev \
+                        libffi-dev
 RUN pip install -r ./requirements.txt
 RUN adduser -D myuser
 USER myuser
