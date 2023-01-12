@@ -1,4 +1,6 @@
 from io import TextIOWrapper
+from datetime import datetime
+import logging
 
 from app.main.model.employee import Employee
 from app.main.model.department import Department
@@ -8,6 +10,14 @@ from app.main.model.job import Job
 from app.main import db
 import csv 
 import sys
+
+logging.basicConfig(filename=f'logs/data_upload_{datetime.now().strftime("%Y_%m_%d_%H_%M")}.log',
+                    filemode='a',
+                    level=logging.INFO,
+                    format='%(asctime)s:%(levelname)s: %(message)s')
+
+logger = logging.getLogger('Globant challenge')
+logger.setLevel(logging.ERROR)
 
 def receive_data(file_type, csv_file):
     response_object = None
@@ -36,7 +46,7 @@ def receive_data(file_type, csv_file):
 def filter_csv(csv_reader):
     for row in csv_reader:
         if '' in row:
-            print("The following row is not going to be inserted, it contains empty values "+str(row),file=sys.stderr)
+            logging.info("The following row is not going to be inserted, it contains empty values "+str(row))
         else:
             yield row
     

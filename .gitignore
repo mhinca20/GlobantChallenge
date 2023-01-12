@@ -105,3 +105,8 @@ ENV/
 # mypy
 .mypy_cache/
 /migrations
+
+
+data/avro/backup/*.avro
+logs/*.log
+data/database.db
