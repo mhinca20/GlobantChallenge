@@ -7,7 +7,6 @@ from ..service.csv_service import receive_data
 
 api = UploadDto.api
 
-#TODO add las ingested and batch size validation
 @api.route('/', methods=['POST'])
 @api.expect('file-type', 'File type to transfer')
 @api.expect('file', 'File to transfer')

@@ -27,32 +27,32 @@ Upload the 3 files, employees, jobs and departments
 Try to get the number of employees hired for each job and department in 2021 divided by quarter. The
 table must be ordered alphabetically by department and job.
 ```
-http://localhost:5000/employeesbyq
+http://localhost:5000/analytics/employeesbyq
 ```
 
 Try to get the list of ids, name and number of employees hired of each department that hired more
 employees than the mean of employees hired in 2021 for all the departments, ordered
 by the number of employees hired (descending).
 ```
-http://localhost:5000/higerhiresdep
+http://localhost:5000/analytics/higerhiresdep
 ```
 
 Chose wich table you want to backup as avro format.
 ```
-http://localhost:5000/backup
+http://localhost:5000/table/backup
 ```
 
 Chose wich table you want to restore from avro format.
 ```
-http://localhost:5000/restore
+http://localhost:5000/table/restore
 ```
 
 Chose wich table you want to get the count.
 ```
-http://localhost:5000/getTableCount
+http://localhost:5000/table/{table_name}
 ```
 
 Chose wich table you want to clean.
 ```
-http://localhost:5000/cleanTable
+http://localhost:5000/table/cleanTable
 ```

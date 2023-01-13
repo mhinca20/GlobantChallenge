@@ -4,6 +4,9 @@ from flask_restx import Namespace, fields
 class UploadDto:
     api = Namespace('upload', description='upload related operations')
     
+class AnalyticsDto:
+    api = Namespace('analytics', description='analytics related operations')
+    
 class TableDto:
     api = Namespace('table', description='table related operations')
     tbl = api.model('table', {

@@ -27,7 +27,9 @@ def receive_data(file_type, csv_file, batch, next_row):
         if batch >= 1 and batch <= 1000 :
             csv_file = TextIOWrapper(csv_file, encoding='utf-8')
             csv_reader = list(csv.reader(csv_file, delimiter=','))
-            for row in filter_csv(csv_reader, next_row, batch):
+            limit = next_row + batch
+            limit = limit if limit <= len(csv_reader) else len(csv_reader)
+            for row in filter_csv(csv_reader, next_row, limit):
                 if "employee" == file_type:
                     row = Employee(id=row[0], name=row[1], datetime=row[2], department_id=row[3], job_id=row[4])
                 elif "department" == file_type:
@@ -38,8 +40,7 @@ def receive_data(file_type, csv_file, batch, next_row):
             response_object = {
                 'status': 'success',
                 'message': 'Data succesfully loaded.',
-                'inserted_rows': str(batch),
-                'next_row': str(next_row + batch )
+                'next_row': limit if limit < len(csv_reader) else None
             },201
         else:
             response_object = {
@@ -53,8 +54,9 @@ def receive_data(file_type, csv_file, batch, next_row):
         }
     return response_object
 
-def filter_csv(csv_reader, next_row, batch):
-    for row in range(next_row, next_row + batch ):
+def filter_csv(csv_reader, next_row, limit):
+    
+    for row in range(next_row, limit):
         if '' in csv_reader[row]:
             logging.info("The following row is not going to be inserted, it contains empty values "+str(csv_reader[row]))
         else:

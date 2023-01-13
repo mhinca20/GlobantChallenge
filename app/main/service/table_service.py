@@ -9,11 +9,11 @@ from app.main.model.employee import Employee
 from app.main.model.department import Department
 from app.main.model.job import Job
 from app.main import db
-from app.main.util.db_utils import save_changes
+from app.main.util.db_utils import save_changes, exec_query
 
 
 def clean_table(table):
-    db.engine.execute("delete from "+ table )
+    exec_query("delete from "+ table )
     response_object = {
             'status': 'success',
             'message': f'Data succesfully deleted from table {table}.'
@@ -21,7 +21,7 @@ def clean_table(table):
     return response_object
 
 def get_table_count(table):
-    result = db.engine.execute("select count(*) as count from "+ table )
+    result = exec_query("select count(*) as count from "+ table )
     return jsonify({
             'status': 'success',
             'message': f'Data succesfully count from table {table}.',
@@ -30,7 +30,7 @@ def get_table_count(table):
 def backup_table(table):   
     schema = avro.schema.parse(open("data/avro/schemas/"+ table +".avsc", "r").read())
     writer = DataFileWriter(open("data/avro/backup/"+ table +".avro", "wb"), DatumWriter(), schema)
-    result = db.engine.execute("select * from "+ table )
+    result = exec_query("select * from "+ table )
     for row in result:
         writer.append(dict(row))
     writer.close()
