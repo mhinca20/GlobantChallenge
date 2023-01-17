@@ -5,7 +5,8 @@ class UploadDto:
     api = Namespace('upload', description='upload related operations')
     up = api.model('upload', {
         'table-name':  fields.String(required=True, description='table name (employee, department, job)'),
-        'file':  fields.String(required=True, description='file path'),
+        'bucket':  fields.String(required=True, description='bucket name'),
+        'key':  fields.String(required=True, description='key or file name inside the bucket'),
         'batch-size':  fields.Integer(required=True, description='batch size to load'),
         'next-row':  fields.Integer(required=True, description='id of next row to be inserted')
     })

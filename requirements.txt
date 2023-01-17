@@ -25,3 +25,5 @@ SQLAlchemy>=1.3.0
 Werkzeug==0.15.5
 markupsafe==2.0.1
 avro
+boto3
+botocore

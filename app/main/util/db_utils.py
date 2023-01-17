@@ -2,16 +2,16 @@ from app.main import db
 from app.main.model.employee import Employee
 from app.main.model.department import Department
 from app.main.model.job import Job
+from app.main.util.s3_helper import read_file
 
 def save_changes(data) -> None:
     db.session.add(data)
     db.session.commit()
     
-def exec_query_from_file(file_name):
-    with open(file_name) as file:
-        sql = file.read().rstrip()
-        result = db.engine.execute(sql)
-        return result
+def exec_query_from_file(bucket, file_name):
+    sql = " ".join(read_file(bucket, file_name))
+    result = db.engine.execute(sql)
+    return result
     
 def exec_query(sql):
     result = db.engine.execute(sql)
