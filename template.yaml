@@ -1,0 +1,76 @@
+AWSTemplateFormatVersion: 2010-09-09
+Description: Globant challenge
+
+Resources:
+  WebAppInstance:
+    Type: AWS::EC2::Instance
+    Properties:
+      IamInstanceProfile: !Ref RootInstanceProfile
+      ImageId: ami-0b5eea76982371e91
+      InstanceType: t2.micro
+      SecurityGroupIds:
+        - !Ref WebAppSecurityGroup
+      UserData: 
+        Fn::Base64: 
+          !Sub |
+            #!/bin/bash
+            yum update -y
+            sudo yum install git -y
+            sudo amazon-linux-extras install docker -y
+            sudo usermod -a -G docker ec2-user
+            sudo curl -L https://github.com/docker/compose/releases/download/1.22.0/docker-compose-$(uname -s)-$(uname -m) -o /usr/local/bin/docker-compose
+            sudo chmod +x /usr/local/bin/docker-compose
+            sudo systemctl start docker
+            cd /home/ec2-user
+            git clone https://github.com/mhinca20/GlobantChallenge.git
+            cd GlobantChallenge/
+            git checkout aws_aproach
+            sudo chown ec2-user:ec2-user /home/ec2-user -R
+            /usr/local/bin/docker-compose up --build
+
+  WebAppSecurityGroup:
+    Type: AWS::EC2::SecurityGroup
+    Properties:
+      GroupName: !Join ["-", [webapp-security-group, dev]]
+      GroupDescription: "Allow HTTP/HTTPS and SSH inbound and outbound traffic"
+      SecurityGroupIngress:
+        - IpProtocol: -1
+          FromPort: -1
+          ToPort: -1
+          CidrIp: 0.0.0.0/0
+        - IpProtocol: tcp
+          FromPort: 22
+          ToPort: 22
+          CidrIp: 0.0.0.0/0
+      
+  RootInstanceProfile:
+    Type: AWS::IAM::InstanceProfile
+    Properties:
+      Path: /
+      Roles:
+        - !Ref S3WritableRole
+  S3WritableRole:
+    Type: AWS::IAM::Role
+    Properties:
+      AssumeRolePolicyDocument:
+        Version: 2012-10-17
+        Statement:
+          - Effect: Allow
+            Principal:
+              Service: ec2.amazonaws.com
+            Action: sts:AssumeRole
+      Path: /
+  RolePolicies:
+    Type: AWS::IAM::Policy
+    DependsOn:
+      - WebAppInstance
+    Properties:
+      PolicyName: WebAppInstancePolicy
+      PolicyDocument:
+        Version: 2012-10-17
+        Statement:
+          - Effect: Allow
+            Action: 's3:*'
+            Resource: '*'
+      Roles:
+        - !Ref S3WritableRole
